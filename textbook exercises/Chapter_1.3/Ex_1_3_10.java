@@ -1,13 +1,11 @@
 import java.util.Stack;
-
 import edu.princeton.cs.algs4.StdOut;
-
 
 public class Ex_1_3_10 {
     public static String infixToPostfix(String infixExpression) {
 
         StringBuilder postfix = new StringBuilder();
-        Stack<Character> stack = new Stack<>();
+        Stack<Character> stack = new Stack<>(); /// create stack to store operator
 
         for (int i = 0; i < infixExpression.length(); i++) {
             char c = infixExpression.charAt(i);
@@ -27,8 +25,9 @@ public class Ex_1_3_10 {
                 }
                 stack.pop(); // pop the left parenthesis
 
-            } else if (isOperator(c)) { // handle operator: higher precedence push before lower precedence
+            } else if (isOperator(c)) { // handle operator: higher precedence get popped first
 
+                // iterate to pop all the operator with higher precedence than the current
                 while (!stack.isEmpty()
                         && precedence(c) < precedence(stack.peek())) {
                     postfix.append(stack.pop());
