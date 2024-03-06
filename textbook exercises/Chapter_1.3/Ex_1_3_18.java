@@ -1,38 +1,37 @@
 import edu.princeton.cs.algs4.StdOut;
 
 public class Ex_1_3_18 {
-    static class LinkedList<Item> {
+    public static class LinkedList<Item> {
         private Node first;
         private int N;
 
-        // Define the node structure
         private class Node {
             Item item;
             Node next;
         }
 
-        // Helper function to print out the linked list
+        public int size() {
+            return N;
+        }
+
         public void print() {
-            // iterate through the list till the end
             for (Node x = first; x != null; x = x.next) {
                 StdOut.printf(x.item.toString() + " ");
             }
             StdOut.println();
         }
 
-        // insert the item at the front of the list
         public void insertFront(Item item) {
             Node oldFirst = first; // store old first node
             first = new Node(); // make new node the first
-            first.item = item; // assign item
+            first.item = item; 
             first.next = oldFirst; // connect old first and new first
             N++;
         }
 
-        // remove the node with specific item
         public Item remove(Item item) {
 
-            // base case: check if list is empty
+            // check if list is empty
             if (first == null) {
                 return null;
             }
@@ -60,20 +59,15 @@ public class Ex_1_3_18 {
             // return null if item not found
             return null;
         }
-
-        public int size() {
-            return N;
-        }
+        
     }
 
     public static void main(String[] args) {
         LinkedList<Integer> llist = new LinkedList<>();
         // add integers in the list
-        llist.insertFront(5);
-        llist.insertFront(4);
-        llist.insertFront(3);
-        llist.insertFront(2);
-        llist.insertFront(1);
+        for (int i = 0; i <= 5; i++) {
+            llist.insertFront(i);
+        }
         llist.print();
         int size = llist.size();
         StdOut.print("Size of linked list before removal: " + size + "\n");
