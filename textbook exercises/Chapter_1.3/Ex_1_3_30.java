@@ -1,9 +1,5 @@
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import org.w3c.dom.Node;
-
-import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Ex_1_3_30 {

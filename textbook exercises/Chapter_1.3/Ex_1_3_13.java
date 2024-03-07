@@ -1,5 +1,3 @@
-import javax.swing.text.html.HTMLDocument.Iterator;
-
 import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdOut;
 
