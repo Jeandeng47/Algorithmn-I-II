@@ -3,7 +3,7 @@ import java.util.NoSuchElementException;
 
 import edu.princeton.cs.algs4.StdOut;
 
-public class Ex_1_3_24 {
+public class Ex_1_3_27 {
     public static class LinkedList<Item> implements Iterable<Item> {
         private Node first;
         private int N;
@@ -80,51 +80,41 @@ public class Ex_1_3_24 {
 
         }
 
-        public Node removeAfter(Node node) {
-            if (node != null && node.next != null) {
-                // remove the node after the given node
-                node.next = node.next.next;
-                N--;
-            }
-            return node;
-        }
-
-        public Node findNode(Item item) {
-            for (Node x = first; x != null; x = x.next) {
-                if (x.item.equals(item)) {
-                    return x;
-                }
-            }
-            return null;
-        }
-
     }
 
+    public static int max(LinkedList<Integer>.Node firstNode) {
+        // return 0 if the list is empty
+        if (firstNode == null) {
+            return 0;
+        }
+
+        int max = firstNode.item;
+        LinkedList<Integer>.Node x = firstNode;
+        while (x != null) {
+            if (x.item.compareTo(max) > 0) {
+                max = x.item;
+            }
+            x = x.next;
+        }
+        return max;
+    }
 
     public static void main(String[] args) {
-        LinkedList<String> llist = new LinkedList<>();
+        LinkedList<Integer> llist = new LinkedList<>();
 
-        llist.insertFront("Doe");
-        llist.insertFront("John");
-        llist.insertFront("am");
-        llist.insertFront("I");
-        llist.insertFront("World");
-        llist.insertFront("Hello");
+        // assume all the keys are positive
+        for (int i = 10; i > 0; i--) {
+            llist.insertFront(i);
+        }
 
-        StdOut.println("Linked list before removal: ");
-        for (String s : llist) {
-            StdOut.printf(s + " "); // ouput: Hello World I am John Doe
+        StdOut.println("The original list is: ");
+        for (Integer num : llist) {
+            StdOut.print(num + " ");
         }
         StdOut.println();
 
-        // should remove the string after hello
-        LinkedList<String>.Node node = llist.findNode("Hello");
-        llist.removeAfter(node);
+        int max = max(llist.first);
+        StdOut.println("The maximum integer in the list is: " + max);
 
-        StdOut.println("Linked list after removal: ");
-        for (String s : llist) {
-            StdOut.printf(s + " "); // ouput: Hello I am John Doe
-        }
-        StdOut.println();
     }
 }
