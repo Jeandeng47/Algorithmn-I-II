@@ -1,4 +1,3 @@
-import java.util.Deque;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -100,7 +99,6 @@ public class Ex_1_3_33_2 {
             size++;
         }
 
-        
         // remove an item from the right end
         public Item popRight() {
 
