@@ -6,6 +6,10 @@ public class Ex_2_1_03 {
     public static <T extends Comparable<T>> void selectionSort(T[] a) {
         int N = a.length;
         int fails = 0;
+
+        StdOut.print("Array: ");
+        printArray(a);
+
         for (int i = 0; i < N; i++) {
             int min = i;
             for (int j = i + 1; j < N; j++) {
@@ -47,16 +51,8 @@ public class Ex_2_1_03 {
             randomArray[i] = rand.nextInt(10) + 1;
         }
 
-        StdOut.println("Decreasing array:");
-        printArray(decrArray);
         selectionSort(decrArray);
-
-        StdOut.println("Increasing array:");
-        printArray(incrArray);
         selectionSort(incrArray);
-
-        StdOut.println("Random array:");
-        printArray(randomArray);
         selectionSort(randomArray);
     }
 }

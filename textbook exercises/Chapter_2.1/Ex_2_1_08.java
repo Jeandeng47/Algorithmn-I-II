@@ -1,22 +1,21 @@
+import java.util.Random;
+
 import edu.princeton.cs.algs4.StdOut;
 
-public class Ex_2_1_04 {
+public class Ex_2_1_08 {
     public static <T extends Comparable<T>> void insertionSort(T[] a) {
         int N = a.length;
-        StdOut.printf("      :");
-        printArray(a);
+        int comp = 0;
         for (int i = 1; i < N; i++) {
             int j = i;
             // if a[j] is less than a[j-1]
             for (; j > 0 && less(a[j], a[j - 1]); j--) {
 
                 exchange(a, j, j - 1);
+                comp++;
             }
-            StdOut.printf("%2d %2d: ", i, j);
-            printArray(a);
         }
-        StdOut.printf("      :");
-        printArray(a);
+        StdOut.println("Comparisons: " + comp);
     }
 
     private static <T extends Comparable<T>> void exchange(T[] a, int i, int j) {
@@ -29,17 +28,20 @@ public class Ex_2_1_04 {
         return v.compareTo(w) < 0;
     }
 
-    private static <T extends Comparable<T>> void printArray(T[] a) {
-        for (int i = 0; i < a.length; i++) {
-            StdOut.print(a[i] + " ");
-        }
-        StdOut.println();
-    }
-
     public static void main(String[] args) {
+        int[] sizes = { 100, 1000, 10000 };
+        Integer[] values = { 1, 2, 3 }; // array with only three distinct values
+        Random rand = new Random();
 
-        String[] a = { "E", "A", "S", "Y", "Q", "U", "E", "S", "T", "I", "O", "N" };
-        insertionSort(a);
+        for (int size : sizes) {
+            Integer[] array = new Integer[size];
+            for (int i = 0; i < size; i++) {
+                array[i] = values[rand.nextInt(values.length)];
+            }
+            StdOut.println("Array size: " + size);
+            insertionSort(array);
+            StdOut.println();
+        }
 
     }
 }
