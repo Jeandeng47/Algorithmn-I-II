@@ -5,7 +5,7 @@ public class Ex_2_1_01 {
         int N = a.length;
         for (int i = 0; i < N; i++) {
             int min = i;
-            StdOut.printf("Iteration %d : ", i);
+            StdOut.printf("Iteration %2d : ", i);
             for (int j = i + 1; j < N; j++) {
                 if (less(a[j], a[min])) {
                     min = j;

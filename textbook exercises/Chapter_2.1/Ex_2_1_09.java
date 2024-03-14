@@ -48,5 +48,9 @@ public class Ex_2_1_09 {
 
         String[] s2 = "E A S Y S H E L L S O R T Q U E S T I O N".split(" ");
         shellSort(s2);
+
+        String[] s3 = "S H E L L S O R T E X A M P L E".split(" ");
+        shellSort(s3);
+
     }
 }
