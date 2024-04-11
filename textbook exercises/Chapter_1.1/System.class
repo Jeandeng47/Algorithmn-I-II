@@ -1,0 +1,409 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+package java.lang;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.Console;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.nio.channels.Channel;
+import java.nio.channels.spi.SelectorProvider;
+import java.security.AccessControlContext;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.PropertyPermission;
+import java.util.ResourceBundle;
+import jdk.internal.HotSpotIntrinsicCandidate;
+import jdk.internal.logger.LazyLoggers;
+import jdk.internal.misc.SharedSecrets;
+import jdk.internal.misc.VM;
+import jdk.internal.module.ModuleBootstrap;
+import jdk.internal.reflect.CallerSensitive;
+import jdk.internal.reflect.Reflection;
+import jdk.internal.util.StaticProperty;
+import sun.nio.fs.DefaultFileSystemProvider;
+
+public final class System {
+   public static final InputStream in;
+   public static final PrintStream out;
+   public static final PrintStream err;
+   private static volatile SecurityManager security;
+   private static volatile Console cons;
+   private static Properties props;
+   private static String lineSeparator;
+   static ModuleLayer bootLayer;
+
+   private static native void registerNatives();
+
+   private System() {
+   }
+
+   public static void setIn(InputStream in) {
+      checkIO();
+      setIn0(in);
+   }
+
+   public static void setOut(PrintStream out) {
+      checkIO();
+      setOut0(out);
+   }
+
+   public static void setErr(PrintStream err) {
+      checkIO();
+      setErr0(err);
+   }
+
+   public static Console console() {
+      Console c;
+      if ((c = cons) == null) {
+         Class var1 = System.class;
+         synchronized(System.class) {
+            if ((c = cons) == null) {
+               cons = c = SharedSecrets.getJavaIOAccess().console();
+            }
+         }
+      }
+
+      return c;
+   }
+
+   public static Channel inheritedChannel() throws IOException {
+      return SelectorProvider.provider().inheritedChannel();
+   }
+
+   private static void checkIO() {
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPermission(new RuntimePermission("setIO"));
+      }
+
+   }
+
+   private static native void setIn0(InputStream var0);
+
+   private static native void setOut0(PrintStream var0);
+
+   private static native void setErr0(PrintStream var0);
+
+   public static void setSecurityManager(SecurityManager s) {
+      if (security == null) {
+         Object.class.getResource("java/lang/ANY");
+         DefaultFileSystemProvider.theFileSystem();
+      }
+
+      if (s != null) {
+         try {
+            s.checkPackageAccess("java.lang");
+         } catch (Exception var2) {
+         }
+      }
+
+      setSecurityManager0(s);
+   }
+
+   private static synchronized void setSecurityManager0(SecurityManager s) {
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPermission(new RuntimePermission("setSecurityManager"));
+      }
+
+      if (s != null && s.getClass().getClassLoader() != null) {
+         AccessController.doPrivileged(new 1(s));
+      }
+
+      security = s;
+   }
+
+   public static SecurityManager getSecurityManager() {
+      return security;
+   }
+
+   @HotSpotIntrinsicCandidate
+   public static native long currentTimeMillis();
+
+   @HotSpotIntrinsicCandidate
+   public static native long nanoTime();
+
+   @HotSpotIntrinsicCandidate
+   public static native void arraycopy(Object var0, int var1, Object var2, int var3, int var4);
+
+   @HotSpotIntrinsicCandidate
+   public static native int identityHashCode(Object var0);
+
+   private static native Properties initProperties(Properties var0);
+
+   public static Properties getProperties() {
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPropertiesAccess();
+      }
+
+      return props;
+   }
+
+   public static String lineSeparator() {
+      return lineSeparator;
+   }
+
+   public static void setProperties(Properties props) {
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPropertiesAccess();
+      }
+
+      if (props == null) {
+         props = new Properties();
+         initProperties(props);
+         System.props = props;
+         VersionProps.init();
+      } else {
+         System.props = props;
+      }
+
+   }
+
+   public static String getProperty(String key) {
+      checkKey(key);
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPropertyAccess(key);
+      }
+
+      return props.getProperty(key);
+   }
+
+   public static String getProperty(String key, String def) {
+      checkKey(key);
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPropertyAccess(key);
+      }
+
+      return props.getProperty(key, def);
+   }
+
+   public static String setProperty(String key, String value) {
+      checkKey(key);
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPermission(new PropertyPermission(key, "write"));
+      }
+
+      return (String)props.setProperty(key, value);
+   }
+
+   public static String clearProperty(String key) {
+      checkKey(key);
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPermission(new PropertyPermission(key, "write"));
+      }
+
+      return (String)props.remove(key);
+   }
+
+   private static void checkKey(String key) {
+      if (key == null) {
+         throw new NullPointerException("key can't be null");
+      } else if (key.equals("")) {
+         throw new IllegalArgumentException("key can't be empty");
+      }
+   }
+
+   public static String getenv(String name) {
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPermission(new RuntimePermission("getenv." + name));
+      }
+
+      return ProcessEnvironment.getenv(name);
+   }
+
+   public static Map<String, String> getenv() {
+      SecurityManager sm = getSecurityManager();
+      if (sm != null) {
+         sm.checkPermission(new RuntimePermission("getenv.*"));
+      }
+
+      return ProcessEnvironment.getenv();
+   }
+
+   @CallerSensitive
+   public static Logger getLogger(String name) {
+      Objects.requireNonNull(name);
+      Class<?> caller = Reflection.getCallerClass();
+      if (caller == null) {
+         throw new IllegalCallerException("no caller frame");
+      } else {
+         return LazyLoggers.getLogger(name, caller.getModule());
+      }
+   }
+
+   @CallerSensitive
+   public static Logger getLogger(String name, ResourceBundle bundle) {
+      ResourceBundle rb = (ResourceBundle)Objects.requireNonNull(bundle);
+      Objects.requireNonNull(name);
+      Class<?> caller = Reflection.getCallerClass();
+      if (caller == null) {
+         throw new IllegalCallerException("no caller frame");
+      } else {
+         SecurityManager sm = getSecurityManager();
+         if (sm != null) {
+            PrivilegedAction<Logger> pa = () -> {
+               return java.lang.System.LoggerFinder.accessProvider().getLocalizedLogger(name, rb, caller.getModule());
+            };
+            return (Logger)AccessController.doPrivileged(pa, (AccessControlContext)null, java.lang.System.LoggerFinder.LOGGERFINDER_PERMISSION);
+         } else {
+            return java.lang.System.LoggerFinder.accessProvider().getLocalizedLogger(name, rb, caller.getModule());
+         }
+      }
+   }
+
+   public static void exit(int status) {
+      Runtime.getRuntime().exit(status);
+   }
+
+   public static void gc() {
+      Runtime.getRuntime().gc();
+   }
+
+   public static void runFinalization() {
+      Runtime.getRuntime().runFinalization();
+   }
+
+   @CallerSensitive
+   public static void load(String filename) {
+      Runtime.getRuntime().load0(Reflection.getCallerClass(), filename);
+   }
+
+   @CallerSensitive
+   public static void loadLibrary(String libname) {
+      Runtime.getRuntime().loadLibrary0(Reflection.getCallerClass(), libname);
+   }
+
+   public static native String mapLibraryName(String var0);
+
+   private static PrintStream newPrintStream(FileOutputStream fos, String enc) {
+      if (enc != null) {
+         try {
+            return new PrintStream(new BufferedOutputStream(fos, 128), true, enc);
+         } catch (UnsupportedEncodingException var3) {
+         }
+      }
+
+      return new PrintStream(new BufferedOutputStream(fos, 128), true);
+   }
+
+   private static void logInitException(boolean printToStderr, boolean printStackTrace, String msg, Throwable e) {
+      if (VM.initLevel() < 1) {
+         throw new InternalError("system classes not initialized");
+      } else {
+         PrintStream log = printToStderr ? err : out;
+         if (msg != null) {
+            log.println(msg);
+         }
+
+         if (printStackTrace) {
+            e.printStackTrace(log);
+         } else {
+            log.println(e);
+            Throwable[] var5 = e.getSuppressed();
+            int var6 = var5.length;
+
+            for(int var7 = 0; var7 < var6; ++var7) {
+               Throwable suppressed = var5[var7];
+               log.println("Suppressed: " + suppressed);
+            }
+
+            Throwable cause = e.getCause();
+            if (cause != null) {
+               log.println("Caused by: " + cause);
+            }
+         }
+
+      }
+   }
+
+   private static void initPhase1() {
+      props = new Properties(84);
+      initProperties(props);
+      VM.saveAndRemoveProperties(props);
+      lineSeparator = props.getProperty("line.separator");
+      StaticProperty.javaHome();
+      VersionProps.init();
+      FileInputStream fdIn = new FileInputStream(FileDescriptor.in);
+      FileOutputStream fdOut = new FileOutputStream(FileDescriptor.out);
+      FileOutputStream fdErr = new FileOutputStream(FileDescriptor.err);
+      setIn0(new BufferedInputStream(fdIn));
+      setOut0(newPrintStream(fdOut, props.getProperty("sun.stdout.encoding")));
+      setErr0(newPrintStream(fdErr, props.getProperty("sun.stderr.encoding")));
+      Terminator.setup();
+      VM.initializeOSEnvironment();
+      Thread current = Thread.currentThread();
+      current.getThreadGroup().add(current);
+      setJavaLangAccess();
+      ClassLoader.initLibraryPaths();
+      VM.initLevel(1);
+   }
+
+   private static int initPhase2(boolean printToStderr, boolean printStackTrace) {
+      try {
+         bootLayer = ModuleBootstrap.boot();
+      } catch (Error | Exception var3) {
+         logInitException(printToStderr, printStackTrace, "Error occurred during initialization of boot layer", var3);
+         return -1;
+      }
+
+      VM.initLevel(2);
+      return 0;
+   }
+
+   private static void initPhase3() {
+      String cn = getProperty("java.security.manager");
+      if (cn != null) {
+         if (!cn.isEmpty() && !"default".equals(cn)) {
+            try {
+               Class<?> c = Class.forName(cn, false, ClassLoader.getBuiltinAppClassLoader());
+               Constructor<?> ctor = c.getConstructor();
+               if (!SecurityManager.class.isAssignableFrom(c) || !Modifier.isPublic(c.getModifiers()) || !Modifier.isPublic(ctor.getModifiers())) {
+                  throw new Error("Could not create SecurityManager: " + ctor.toString());
+               }
+
+               ctor.setAccessible(true);
+               SecurityManager sm = (SecurityManager)ctor.newInstance();
+               setSecurityManager(sm);
+            } catch (Exception var4) {
+               throw new Error("Could not create SecurityManager", var4);
+            }
+         } else {
+            setSecurityManager(new SecurityManager());
+         }
+      }
+
+      VM.initLevel(3);
+      ClassLoader scl = ClassLoader.initSystemClassLoader();
+      Thread.currentThread().setContextClassLoader(scl);
+      VM.initLevel(4);
+   }
+
+   private static void setJavaLangAccess() {
+      SharedSecrets.setJavaLangAccess(new 2());
+   }
+
+   static {
+      registerNatives();
+      in = null;
+      out = null;
+      err = null;
+   }
+}
