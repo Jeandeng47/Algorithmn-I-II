@@ -48,6 +48,8 @@ public class Ex_1_1_34 {
         // - Print the N numbers in random order.
         printNumsRandom();
 
+        scanner.close();
+
     }
 
     private static void processNum(double num) {
