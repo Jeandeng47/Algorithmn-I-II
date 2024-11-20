@@ -1,6 +1,11 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "algs4.jar"
-    ]
+        "/home/ziyingdeng/PRINCEalgo/algs4.jar"
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#133328",
+        "titleBar.activeBackground": "#1B4838",
+        "titleBar.activeForeground": "#F6FBF9"
+    }
 }

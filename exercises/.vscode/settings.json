@@ -1,0 +1,12 @@
+{
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "/home/ziyingdeng/algo/algs4.jar",
+    "c:\\Users\\dengz\\Desktop\\algo\\algs4.jar"
+  ],
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#40037E",
+    "titleBar.activeBackground": "#5A04B1",
+    "titleBar.activeForeground": "#FCF9FF"
+  }
+}
