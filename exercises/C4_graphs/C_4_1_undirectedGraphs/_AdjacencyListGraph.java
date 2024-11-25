@@ -106,7 +106,7 @@ public class _AdjacencyListGraph {
      */
     @Override
     public String toString() {
-        String s = "V: " + V + " E: " + E + "\n";
+        String s = V + " vertices, " + E + " edges\n";
         for (int v = 0; v < V; v++) {
             s += v + " : ";
             for (Integer w : adj[v]) {
